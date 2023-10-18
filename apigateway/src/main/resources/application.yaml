@@ -1,0 +1,46 @@
+server:
+  port: 8762
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: book-service
+          uri: lb://BOOK-SERVICE
+          predicates:
+            - Path=/api/book/**
+          filters:
+            - AuthFilter
+        - id: basket-service
+          uri: lb://BASKET-SERVICE
+          predicates:
+            - Path=/api/basket/**
+          filters:
+            - AuthFilter
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/v1/users/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-headers:
+              - "*"
+            allowed-methods:
+              - "*"
+            allowed-origin-patterns:
+              - "*"
+            allowed-origins:
+              - "*"
+
+jwt:
+  secret: BvPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY

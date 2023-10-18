@@ -1,4 +1,4 @@
-package com.luanvan.gatewayservice.Util;
+package com.luanvan.apigateway.Util;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

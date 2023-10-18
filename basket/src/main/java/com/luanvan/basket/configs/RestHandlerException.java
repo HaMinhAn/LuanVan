@@ -1,7 +1,7 @@
-package com.example.userService.config;
+package com.luanvan.basket.configs;
 
-import com.example.userService.model.AppException;
-import com.example.userService.model.ErrorDto;
+import com.luanvan.basket.dto.AppException;
+import com.luanvan.basket.dto.ErrorDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

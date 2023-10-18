@@ -1,4 +1,4 @@
-package com.luanvan.webservice.command.configs;
+package com.luanvan.basket.configs;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

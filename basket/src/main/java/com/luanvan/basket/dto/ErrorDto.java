@@ -1,4 +1,4 @@
-package com.example.userService.model;
+package com.luanvan.basket.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

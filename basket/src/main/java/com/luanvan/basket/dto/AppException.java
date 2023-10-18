@@ -1,4 +1,4 @@
-package com.example.userService.model;
+package com.luanvan.basket.dto;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

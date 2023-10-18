@@ -8,6 +8,7 @@ import com.example.userService.data.User;
 import com.example.userService.model.CredentialsDto;
 import com.example.userService.model.RegisterDto;
 import com.example.userService.model.UserDto;
+import com.example.userService.service.JwtService;
 import com.example.userService.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class UserController {
   @Autowired
   private UserService userService;
   @Autowired
-  private UserAuthProvider userAuthProvider;
+  private JwtService jwtService;
 
   //  @GetMapping("/listUser")
 //  public List<User> getAllUser() {
@@ -47,14 +48,18 @@ public class UserController {
   public ResponseEntity<UserDto> login(@RequestBody CredentialsDto credentialsDto) {
 
     UserDto user = userService.login(credentialsDto);
-    user.setToken(userAuthProvider.createToken(user.getUsername()));
+    user.setToken(jwtService.generateToken(user.getUsername()));
     return ResponseEntity.ok(user);
   }
 
+  @GetMapping("/hello")
+  public String hello(){
+    return "HELLO this is service user";
+  }
   @PostMapping("/register")
   public ResponseEntity<UserDto> register(@RequestBody RegisterDto registerDto) {
     UserDto user = userService.register(registerDto);
-    user.setToken(userAuthProvider.createToken(user.getUsername()));
+    user.setToken(jwtService.generateToken(user.getUsername()));
 
     return ResponseEntity.created(URI.create("/users" + user.getId()))
             .body(user);

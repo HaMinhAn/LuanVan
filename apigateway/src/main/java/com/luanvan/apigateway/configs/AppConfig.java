@@ -1,4 +1,4 @@
-package com.luanvan.gatewayservice.configs;
+package com.luanvan.apigateway.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

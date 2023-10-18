@@ -1,18 +1,11 @@
-package com.luanvan.gatewayservice.configs;
+package com.luanvan.apigateway.configs;
 
-import com.luanvan.gatewayservice.Util.JwtUtil;
+import com.luanvan.apigateway.Util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.stereotype.Component;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.auth0.jwt.interfaces.JWTVerifier;
 import com.google.common.net.HttpHeaders;
 
 @Component

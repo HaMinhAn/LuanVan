@@ -4,13 +4,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
+@RequiredArgsConstructor
 @Component
 public class JwtService {
 
@@ -20,6 +21,7 @@ public class JwtService {
 
   public void validateToken(final String token) {
     Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token);
+
   }
 
 
