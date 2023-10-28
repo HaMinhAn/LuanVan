@@ -1,12 +1,11 @@
 package com.luanvan.apigateway.configs;
 
+import com.google.common.net.HttpHeaders;
 import com.luanvan.apigateway.Util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.stereotype.Component;
-
-import com.google.common.net.HttpHeaders;
 
 @Component
 public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
@@ -26,7 +25,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
   public GatewayFilter apply(Config config) {
     return ((exchange, chain) -> {
       if (validator.isSecured.test(exchange.getRequest())) {
-        System.out.println("helllo");
+        System.out.println("hello");
         //header contains token or not
         if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
           throw new RuntimeException("missing authorization header");

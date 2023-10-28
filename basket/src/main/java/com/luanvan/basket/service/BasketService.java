@@ -7,6 +7,7 @@ import com.luanvan.basket.models.BasketItem;
 import com.luanvan.basket.repository.BasketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class BasketService {
 
   @Autowired
   private BasketRepository basketRepository;
+
 
   public Basket getBasket(String user) throws ExecutionException, InterruptedException {
     System.out.println(user);
@@ -50,6 +52,7 @@ public class BasketService {
     } // Trả về phần tử có id khớp hoặc null nếu không tìm thấy
     return null;
   }
+
   public void add(AddBookDto req) {
     Optional<Basket> existingBasket = basketRepository.findById(req.getUser());
     if (existingBasket.isEmpty()) {
@@ -130,29 +133,10 @@ public class BasketService {
     basketRepository.save(existingBasket.get());
     return String.format("%s đã được xóa", name);
   }
-//  public void addItemToBasket(String name, int productId, int quantity) {
-////    Optional<Basket> existingBasket = basketRepository.findByUsername(name);
-//
-//    if (existingBasket.isPresent()) {
-//      Basket basket = existingBasket.get();
-//      if(basket.getItems().contains(productId)){
-//        BasketItem basketItemExist = basket.getItems().stream().filter(basketItem -> basketItem.getId()==productId).findAny().get();
-//        basketItemExist.setQuantity(basketItemExist.getQuantity() + quantity);
-//      } else {
-//        BookResponse bookResponse = webClient.get().uri(String.format("http://localhost:9001/api/book/basket/%d", productId)).retrieve().bodyToMono(BookResponse.class).block();
-//
-//        BasketItem basketItem = BasketItem.builder().id(bookResponse.getId())
-//                .name(bookResponse.getName())
-//                .price(bookResponse.getPrice())
-//                .quantity(quantity)
-//                .image(bookResponse.getImage())
-//                .build();
-//        basket.getItems().add(basketItem);
-//      }
-//    }
-//  }
-
-//  public void removeItemFromBasket(String productId) {
-//    basketRepository.deleteById(productId);
-//  }
+  @KafkaListener(topics = "cart-order", containerFactory = "kafkaListenerContainerFactory")
+  public String printProduct(String receiveBookDTO){
+    delete(receiveBookDTO);
+    System.out.println(receiveBookDTO);
+    return receiveBookDTO;
+  }
 }

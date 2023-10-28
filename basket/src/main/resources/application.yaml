@@ -4,6 +4,21 @@ spring:
   redis:
     host: localhost
     port: 6379
+  kafka:
+    producer:
+      bootstrap-servers: localhost:29092
+    consumer:
+      bootstrap-servers: localhost:29092
+      group-id: add-cart
+      properties:
+        spring:
+          deserializer:
+            key:
+              trusted:
+                packages: "*"
+            value:
+              trusted:
+                packages: "*"
 server:
   port: 9004
 eureka:

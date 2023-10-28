@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/apigateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/apigateway.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/basket.main.iml" filepath="$PROJECT_DIR$/.idea/modules/basket.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.example.userService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.example.userService.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.luanvan.apigateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.luanvan.apigateway.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.luanvan.webservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.luanvan.webservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/inventoryService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/inventoryService.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/microservice.iml" filepath="$PROJECT_DIR$/.idea/microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/oderService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/oderService.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/userService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/userService.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/webservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/webservice.main.iml" />
+    </modules>
+  </component>
+</project>

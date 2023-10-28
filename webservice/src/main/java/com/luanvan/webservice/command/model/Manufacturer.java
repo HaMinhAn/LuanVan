@@ -3,6 +3,7 @@ package com.luanvan.webservice.command.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -23,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Manufacturer")
+@Builder
 public class Manufacturer {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,10 +35,10 @@ public class Manufacturer {
   @Column(name = "name", columnDefinition = "nvarchar(40)")
   private String name;
 
-  @Column(name = "id_phone")
-  @OneToMany(mappedBy = "manufacturer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JsonBackReference
-  @ToString.Exclude
-  private List<Book> books;
+//  @Column(name = "id_phone")
+//  @OneToMany(mappedBy = "manufacturer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//  @JsonBackReference
+//  @ToString.Exclude
+//  private List<Book> books;
 
 }

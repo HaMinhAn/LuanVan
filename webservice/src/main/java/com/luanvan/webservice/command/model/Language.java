@@ -30,7 +30,5 @@ public class Language {
   @Column(name = "langauge", columnDefinition = "nvarchar(30)")
   private String language;
 
-  @OneToMany(mappedBy = "language")
-  @JsonBackReference
-  private List<Book> books = new ArrayList<>();
+
 }

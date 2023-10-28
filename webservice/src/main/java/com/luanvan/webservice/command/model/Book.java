@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -51,7 +53,7 @@ public class Book {
   @JsonManagedReference
   private List<Picture> pictureList;
 
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
   @JoinTable(name = "book_authors", joinColumns = @JoinColumn(name = "id_book"), inverseJoinColumns = @JoinColumn(name = "id_author"))
   @JsonManagedReference
   private List<Author> authors = new ArrayList<>();
@@ -67,5 +69,6 @@ public class Book {
   @ManyToOne
   @JoinColumn(name = "id_manufacturer")
   @JsonManagedReference
+  @ToString.Exclude
   private Manufacturer manufacturer;
 }

@@ -9,6 +9,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  kafka:
+    producer:
+      bootstrap-servers: 'localhost:29092'
+    consumer:
+      boostrap-servers: 'localhost:29092'
 server:
   port: 9001
 eureka:

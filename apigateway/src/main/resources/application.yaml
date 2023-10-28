@@ -26,6 +26,12 @@ spring:
             - Path=/api/basket/**
           filters:
             - AuthFilter
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/api/order/**
+          filters:
+            - AuthFilter
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -36,8 +42,6 @@ spring:
             allowed-headers:
               - "*"
             allowed-methods:
-              - "*"
-            allowed-origin-patterns:
               - "*"
             allowed-origins:
               - "*"
