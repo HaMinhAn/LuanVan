@@ -5,6 +5,7 @@
     <file type="web" url="file://$PROJECT_DIR$/../microservice-parent/gateway-service" />
     <file type="web" url="file://$PROJECT_DIR$/apigateway" />
     <file type="web" url="file://$PROJECT_DIR$/basket" />
+    <file type="web" url="file://$PROJECT_DIR$/emailService" />
     <file type="web" url="file://$PROJECT_DIR$/inventoryService" />
     <file type="web" url="file://$PROJECT_DIR$/oderService" />
     <file type="web" url="file://$PROJECT_DIR$/server" />

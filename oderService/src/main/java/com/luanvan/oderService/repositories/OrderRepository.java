@@ -10,4 +10,5 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
   Optional<Order> findByUsername(String user);
 
 
+  Optional<Order> findByNo(String no);
 }

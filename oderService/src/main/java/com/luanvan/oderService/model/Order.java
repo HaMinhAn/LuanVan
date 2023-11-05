@@ -2,6 +2,7 @@ package com.luanvan.oderService.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.luanvan.oderService.utils.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "oder")
@@ -31,20 +32,21 @@ public class Order {
   @Column(name = "id_oder")
   private Integer id;
 
+  private String email;
   private String no;
-  @Column(name = "name", columnDefinition = "nvarchar(max)")
+  @Column(name = "username", columnDefinition = "nvarchar(max)")
   private String username;
 
   private LocalDateTime createdDate;
   @OneToMany(mappedBy = "oder")
   @JsonManagedReference
-  private Set<OrderItem> items;
+  private List<OrderItem> items;
 
   private String address;
-  private int phoneNumber;
+  private long phoneNumber;
   private long totalPrice;
 
-  private String status;
+  private OrderStatus status;
   @ManyToOne
   @JoinColumn(name = "id_payment")
   @JsonBackReference

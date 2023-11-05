@@ -14,16 +14,12 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 public class OrderRequest {
-  private String user;
+  private String username;
   private String name;
-  private LocalDateTime createdDate;
-
-  private String image;
-  private String items;
-
+  private Set<OrderItem> items;
   private String address;
-
-  private long price;
-  private String paymentMethod;
+  private Integer paymentMethod;
+  private long phoneNumber;
+  private String email;
   private boolean isPaid;
 }

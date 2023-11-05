@@ -134,9 +134,9 @@ public class BasketService {
     return String.format("%s đã được xóa", name);
   }
   @KafkaListener(topics = "cart-order", containerFactory = "kafkaListenerContainerFactory")
-  public String printProduct(String receiveBookDTO){
-    delete(receiveBookDTO);
-    System.out.println(receiveBookDTO);
-    return receiveBookDTO;
+  public String printProduct(String username){
+    System.out.println(username);
+    delete(username);
+    return username;
   }
 }

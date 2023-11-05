@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.example.userService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.example.userService.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.luanvan.apigateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.luanvan.apigateway.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.luanvan.webservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.luanvan.webservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/emailService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/emailService.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/inventoryService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/inventoryService.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/microservice.iml" filepath="$PROJECT_DIR$/.idea/microservice.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/oderService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/oderService.main.iml" />

@@ -24,18 +24,18 @@ spring:
           uri: lb://BASKET-SERVICE
           predicates:
             - Path=/api/basket/**
-          filters:
-            - AuthFilter
         - id: order-service
           uri: lb://ORDER-SERVICE
           predicates:
             - Path=/api/order/**
-          filters:
-            - AuthFilter
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
             - Path=/api/v1/users/**
+        - id: email-service
+          uri: lb://EMAIL-SERVICE
+          predicates:
+            - Path=/api/mail/**
       globalcors:
         cors-configurations:
           '[/**]':

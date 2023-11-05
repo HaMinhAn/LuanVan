@@ -29,12 +29,13 @@ public class OrderController {
   @PostMapping
   public ResponseEntity createOrder(@RequestBody OrderRequest orderRequest){
     orderService.addOrder(orderRequest);
-    return ResponseEntity.ok("Tạo tác giả thành công ");
+    return ResponseEntity.ok("Tạo order thành công ");
   }
 
-  @PostMapping("/test")
-  public ResponseEntity<String> payment(@RequestBody OrderRequest orderRequest){
-    orderService.testKafka(orderRequest.getName());
+  @PostMapping("/cart/delete/{username}")
+  public ResponseEntity<String> payment(@PathVariable String username){
+    System.out.println(username);
+    orderService.testKafka(username);
     return ResponseEntity.ok("Thanh toan thanh cong");
   }
 

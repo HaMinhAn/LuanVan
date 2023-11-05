@@ -26,7 +26,7 @@ public class OrderItem {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id_oderitem")
   private Integer id;
-
+  @Column(name = "name", columnDefinition = "nvarchar(max)")
   private String name;
 
   private int quantity;

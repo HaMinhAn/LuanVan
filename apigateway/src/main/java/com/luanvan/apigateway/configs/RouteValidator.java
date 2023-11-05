@@ -13,7 +13,8 @@ public class RouteValidator {
           "/api/book",
           "api/book/category/**",
           "/eureka/**",
-          "/api/book/hello"
+          "/api/book/hello",
+          "/api/**"
   );
 
   public Predicate<ServerHttpRequest> isSecured =
