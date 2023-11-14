@@ -9,8 +9,8 @@ import com.example.userService.mappers.UserMapper;
 import com.example.userService.model.AppException;
 import com.example.userService.model.CredentialsDto;
 import com.example.userService.model.RegisterDto;
+import com.example.userService.model.UpdateUserDto;
 import com.example.userService.model.UserDto;
-import org.apache.http.client.methods.HttpHead;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.nio.CharBuffer;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,6 +30,7 @@ public class UserService {
   private PasswordEncoder passwordEncoder;
   @Autowired
   private RoleRepository roleRepository;
+
 
   public UserDto findByUsername(String username) {
     User user = userRepository.findByUsername(username).orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
@@ -78,5 +78,34 @@ public class UserService {
     }
     boolean isAdmin = userOptional.get().getRoles().stream().anyMatch(role -> role.getId() == 1);
     return isAdmin;
+  }
+
+
+  public void updateInfor(int id, UpdateUserDto updateUserDto) {
+    Optional<User> optionalUser = userRepository.findById(id);
+    if(optionalUser.isEmpty()){
+      throw new AppException("Người dùng không hợp lệ", HttpStatus.BAD_REQUEST);
+    }
+    User user = optionalUser.get();
+    user.setAddress(updateUserDto.getAddress());
+    user.setAge(updateUserDto.getAge());
+    user.setName(updateUserDto.getName());
+    user.setPhoneNumber(updateUserDto.getPhoneNumber());
+    user.setDOB(updateUserDto.getDob());
+    userRepository.save(user);
+  }
+
+  public void updateUserPass(int id, String pass) {
+  Optional<User> optionalUser = userRepository.findById(id);
+  if(optionalUser.isEmpty()){
+    throw new AppException("Người dùng không hợp lệ", HttpStatus.BAD_REQUEST);
+  }
+    User user = optionalUser.get();
+  String passEncode = passwordEncoder.encode(CharBuffer.wrap(pass));
+  if(user.getPassword() == passEncode){
+    throw  new AppException("Mật khẩu trùng với mật khẩu cũ", HttpStatus.BAD_REQUEST);
+  }
+  user.setPassword(passEncode);
+  userRepository.save(user);
   }
 }

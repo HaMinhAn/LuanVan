@@ -2,13 +2,13 @@ spring:
   application:
     name: basket-service
   redis:
-    host: localhost
+    host: ${REDIS_HOST}
     port: 6379
   kafka:
     producer:
-      bootstrap-servers: localhost:29092
+      bootstrap-servers: ${KAFKA_SERVER}
     consumer:
-      bootstrap-servers: localhost:29092
+      bootstrap-servers: ${KAFKA_SERVER}
       group-id: add-cart
       properties:
         spring:
@@ -24,6 +24,6 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+      defaultZone: ${EUREKA_URI}
   instance:
     preferIpAddress: true

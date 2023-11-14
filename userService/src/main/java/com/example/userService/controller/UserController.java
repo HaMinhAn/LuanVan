@@ -1,25 +1,22 @@
 package com.example.userService.controller;
 
 import java.net.URI;
-import java.util.List;
 
-import com.example.userService.config.UserAuthProvider;
-import com.example.userService.data.User;
 import com.example.userService.model.CredentialsDto;
 import com.example.userService.model.RegisterDto;
+import com.example.userService.model.UpdateUserDto;
 import com.example.userService.model.UserDto;
 import com.example.userService.service.JwtService;
 import com.example.userService.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -30,16 +27,21 @@ public class UserController {
   private UserService userService;
   @Autowired
   private JwtService jwtService;
-
-  //  @GetMapping("/listUser")
-//  public List<User> getAllUser() {
-//    return userService.getAllUser();
-//  }
   @GetMapping("{id}")
   public ResponseEntity<UserDto> getInfor(@PathVariable int id) {
     return ResponseEntity.ok(userService.getEmail(id));
   }
 
+
+  @PutMapping("/{id}")
+  public void updateInfor(@PathVariable int id, @RequestBody UpdateUserDto registerDto){
+    userService.updateInfor(id, registerDto);
+  }
+
+  @PutMapping("/pass/{id}")
+  public void updatePass(@PathVariable int id, @RequestParam String pass){
+    userService.updateUserPass(id, pass);
+  }
   @GetMapping("/isadmin/{id}")
   public  boolean isAdmin(@PathVariable int id){
     return userService.isAdmin(id);

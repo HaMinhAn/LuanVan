@@ -3,6 +3,7 @@ package com.luanvan.webservice.command.configs;
 import com.luanvan.webservice.command.dto.SendProductToCart;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,12 +18,14 @@ import java.util.Map;
 
 @Configuration
 public class WebClientConfig {
+  @Value("${spring.kafka.producer.bootstrap-servers}")
+  private String kafkaHost;
   @Bean
   public ProducerFactory<String, SendProductToCart> producerFactory() {
     Map<String, Object> configProps = new HashMap<>();
     configProps.put(
             ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-            "localhost:29092");
+            kafkaHost);
     configProps.put(
             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
             StringSerializer.class);

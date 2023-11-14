@@ -36,7 +36,8 @@ public class Order {
   private String no;
   @Column(name = "username", columnDefinition = "nvarchar(max)")
   private String username;
-
+  @Column(name = "receiver", columnDefinition = "nvarchar(max)")
+  private String receiver;
   private LocalDateTime createdDate;
   @OneToMany(mappedBy = "oder")
   @JsonManagedReference
@@ -49,7 +50,6 @@ public class Order {
   private OrderStatus status;
   @ManyToOne
   @JoinColumn(name = "id_payment")
-  @JsonBackReference
   private PaymentMethod paymentMethod;
   private boolean isPaid;
 }

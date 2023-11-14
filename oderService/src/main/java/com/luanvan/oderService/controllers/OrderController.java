@@ -25,13 +25,24 @@ public class OrderController {
   public ResponseEntity<List<Order>> orderList(){
     return ResponseEntity.ok(orderService.getListOrder());
   }
-
+  @GetMapping("/private/{user}")
+  public ResponseEntity<List<Order>> orderListByUser(@PathVariable String user){
+    return ResponseEntity.ok(orderService.getListOrderByUser(user));
+  }
   @PostMapping
   public ResponseEntity createOrder(@RequestBody OrderRequest orderRequest){
     orderService.addOrder(orderRequest);
     return ResponseEntity.ok("Tạo order thành công ");
   }
-
+  @GetMapping("/{status}")
+  public List<Order> getOrderByStatus(@PathVariable int status){
+    return orderService.getListOrderByStatus(status);
+  }
+  @PutMapping("/{id}/{state}")
+  public ResponseEntity updateStatusOrder(@PathVariable int id, @PathVariable int state){
+    orderService.updateStatusOrder(id, state);
+    return ResponseEntity.ok("Cập nhật trạng thái đơn hàng thành công");
+  }
   @PostMapping("/cart/delete/{username}")
   public ResponseEntity<String> payment(@PathVariable String username){
     System.out.println(username);

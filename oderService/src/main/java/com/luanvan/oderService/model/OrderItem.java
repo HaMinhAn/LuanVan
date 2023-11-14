@@ -32,8 +32,8 @@ public class OrderItem {
   private int quantity;
 
   private long price;
-
-  private String url;
+  @Column(name = "url", columnDefinition = "nvarchar(max)")
+  private String image;
   @ManyToOne
   @JoinColumn(name = "id_oder")
   @JsonBackReference

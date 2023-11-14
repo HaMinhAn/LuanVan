@@ -1,9 +1,11 @@
 package com.example.userService.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +43,7 @@ public class User {
     private Boolean sex;
 
     @Column(name = "Year_Of_Birth")
-    private int DOB;
+    private LocalDateTime DOB;
 
     @Column(name = "Username")
     private String username;
@@ -49,14 +52,15 @@ public class User {
     private String password;
 
     @Column(name = "Phone")
+    @NumberFormat
     private String phoneNumber;
-
 
     private String address;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name ="User_Role", joinColumns = @JoinColumn(name="id_User"), inverseJoinColumns = @JoinColumn(name="ID_Role"))
-    private List<Role> roles = new ArrayList<>();
+    @JsonBackReference
+    private List<Role> roles;
 
 
   // getters và setters

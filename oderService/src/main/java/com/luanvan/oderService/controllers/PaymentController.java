@@ -1,7 +1,7 @@
 package com.luanvan.oderService.controllers;
 
 import com.luanvan.oderService.Configs.VNPayConfig;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +23,10 @@ import java.util.TimeZone;
 @RestController
 @RequestMapping("/api/order/payment")
 public class PaymentController {
-
+    @Value("${app.host}")
+    private String host;
+    @Value("${app.vnp-timeout}")
+    private int timout;
     @GetMapping("/VNPay/{price}")
     public String getPay(@PathVariable(name = "price") long price) throws UnsupportedEncodingException{
 
@@ -34,7 +37,7 @@ public class PaymentController {
         String bankCode = "NCB";
 
         String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
-        String vnp_IpAddr = "127.0.0.1";
+        String vnp_IpAddr = host;
 
         String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
 
@@ -59,7 +62,7 @@ public class PaymentController {
         String vnp_CreateDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
 
-        cld.add(Calendar.MINUTE, 150);
+        cld.add(Calendar.MINUTE, timout);
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 

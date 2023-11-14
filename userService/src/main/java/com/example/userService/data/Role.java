@@ -1,5 +1,6 @@
 package com.example.userService.data;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,5 +28,6 @@ public class Role {
   private String name;
 
   @ManyToMany(mappedBy = "roles")
-  private List<User> users = new ArrayList<>();
+  @JsonManagedReference
+  private List<User> users;
 }

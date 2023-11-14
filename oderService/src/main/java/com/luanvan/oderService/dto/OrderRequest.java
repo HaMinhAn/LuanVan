@@ -21,5 +21,5 @@ public class OrderRequest {
   private Integer paymentMethod;
   private long phoneNumber;
   private String email;
-  private boolean isPaid;
+  private boolean paid;
 }
