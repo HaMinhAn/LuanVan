@@ -30,8 +30,8 @@ services:
       - 9003:9003
     environment:
       EUREKA_URI: http://server:8761/eureka
-      SQL_HOST: 192.168.1.8
-      SQL_PASS: 123456
+      SQL_HOST: mssqldb
+      SQL_PASS: Pass12345
     links:
       - mssqldb
 
@@ -42,8 +42,8 @@ services:
     environment:
       KAFKA_SERVER: kafka:29092
       EUREKA_URI: http://server:8761/eureka
-      SQL_HOST: 192.168.1.8
-      SQL_PASS: 123456
+      SQL_HOST: mssqldb
+      SQL_PASS: Pass12345
       APP_HOST: 192.168.1.8
       VNP_TIMEOUT: 4000
     links:
@@ -59,7 +59,7 @@ services:
       KAFKA_SERVER: kafka:29092
       EUREKA_URI: http://server:8761/eureka
       SQL_HOST: mssqldb
-      SQL_PASS: 123456
+      SQL_PASS: Pass12345
     links:
       - kafka
       - mssqldb
@@ -91,11 +91,11 @@ services:
   mssqldb:
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: Test12345
+      SA_PASSWORD: Pass12345
     # mssql server image isn't available for arm64 architecture, so we use azure-sql instead
-#    image: mcr.microsoft.com/azure-sql-edge:1.0.4
+    #    image: mcr.microsoft.com/azure-sql-edge:1.0.4
     # If you really want to use MS SQL Server, uncomment the following line
-    image: book-db
+    image: mssql-db
     ports:
       - "1433:1433"
 
