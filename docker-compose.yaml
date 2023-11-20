@@ -99,10 +99,10 @@ services:
     ports:
       - "1433:1433"
 
-  front-end:
-    image: luanvan/ui-luanvan
-    ports:
-      - 3000:80
+#  front-end:
+#    image: luanvan/ui-luanvan
+#    ports:
+#      - 3000:80
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -122,10 +122,23 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://192.168.1.8:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://kafka:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3100:3000
+    container_name: grafana
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - E:\LuanVan\backend\LuanVan\microservice\prometheus\prometheus.yaml:/etc/prometheus/prometheus.yml
 
 networks:
   default:

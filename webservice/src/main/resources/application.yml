@@ -22,3 +22,10 @@ eureka:
       defaultZone: ${EUREKA_URI}
   instance:
     preferIpAddress: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus

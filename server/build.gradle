@@ -23,7 +23,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator:2.7.12'
 	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-server
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-server', version: '2.2.10.RELEASE'
-
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools:2.5.15'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.8'
 }

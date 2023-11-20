@@ -35,3 +35,10 @@ config:
     port: 587
     username: ${emailuser}
     password: ${emailpass}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus

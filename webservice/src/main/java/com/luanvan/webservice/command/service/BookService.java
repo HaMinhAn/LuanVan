@@ -1,5 +1,6 @@
 package com.luanvan.webservice.command.service;
 
+import com.luanvan.webservice.command.configs.BookSpecification;
 import com.luanvan.webservice.command.dto.BookResponse;
 import com.luanvan.webservice.command.dto.CreateBookRequest;
 import com.luanvan.webservice.command.dto.CreatePicture;
@@ -13,6 +14,7 @@ import com.luanvan.webservice.command.model.Category;
 import com.luanvan.webservice.command.model.Language;
 import com.luanvan.webservice.command.model.Manufacturer;
 import com.luanvan.webservice.command.model.Picture;
+import com.luanvan.webservice.command.model.SearchCriteria;
 import com.luanvan.webservice.command.repositories.AuthorRepository;
 import com.luanvan.webservice.command.repositories.BookRepository;
 import com.luanvan.webservice.command.repositories.CategoryRepository;
@@ -20,6 +22,7 @@ import com.luanvan.webservice.command.repositories.LanguageRepository;
 import com.luanvan.webservice.command.repositories.ManufacturerRepository;
 import com.luanvan.webservice.command.repositories.PictureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -183,4 +186,13 @@ public class BookService {
     sendToCart.send("cart-order",sendProductToCart);
   }
 
+  public List<Book> searchBooks(String name) {
+    System.out.println(String.format("%%%s%%",name));
+    Specification<Book> spec = Specification.where(null);
+    if (name != null) {
+      spec = spec.and(BookSpecification.hasName(String.format("%%%s%%",name)));
+    }
+    List<Book> books = bookRepository.findAll(spec);
+    return books;
+  }
 }

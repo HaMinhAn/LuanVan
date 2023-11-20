@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "PaymentMethod")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
