@@ -16,14 +16,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -191,5 +195,24 @@ public class OrderService {
       return null;
     }
     return orders.get();
+  }
+
+  public Map<String, BigDecimal> getOrdersOrderByCreateDate() {
+    Map<String, BigDecimal> revenueByMonth = new HashMap<>();
+    List<Order> allOrders = orderRepository.findAllByStatusAndIsPaid(OrderStatus.RECEIVED, true);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+
+    for (Order order : allOrders) {
+      // Chuyển đổi LocalDateTime thành String sử dụng DateTimeFormatter
+      String orderDateString = order.getCreatedDate().format(formatter);
+
+      // Parse String thành LocalDateTime
+      LocalDateTime orderDate = LocalDateTime.parse(orderDateString, formatter);
+
+      // Tiếp tục xử lý như trước
+      String monthYear = orderDate.getMonth().toString() + " " + orderDate.getYear();
+      revenueByMonth.merge(monthYear, new BigDecimal(order.getTotalPrice()), BigDecimal::add);
+    }
+    return revenueByMonth;
   }
 }

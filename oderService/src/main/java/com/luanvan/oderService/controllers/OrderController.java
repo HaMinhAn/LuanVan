@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/order")
@@ -24,6 +26,11 @@ public class OrderController {
   @GetMapping
   public ResponseEntity<List<Order>> orderList(){
     return ResponseEntity.ok(orderService.getListOrder());
+  }
+
+  @GetMapping("/createDate")
+  public Map<String, BigDecimal> getOrdersOrderByCreateDate(){
+    return orderService.getOrdersOrderByCreateDate();
   }
   @GetMapping("/private/{user}")
   public ResponseEntity<List<Order>> orderListByUser(@PathVariable String user){
