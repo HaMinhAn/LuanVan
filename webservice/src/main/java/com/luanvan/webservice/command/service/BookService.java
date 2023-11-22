@@ -5,6 +5,7 @@ import com.luanvan.webservice.command.dto.BookResponse;
 import com.luanvan.webservice.command.dto.CreateBookRequest;
 import com.luanvan.webservice.command.dto.CreatePicture;
 import com.luanvan.webservice.command.dto.SendProductToCart;
+import com.luanvan.webservice.command.dto.UpdateBookRequest;
 import com.luanvan.webservice.command.exceptions.AppException;
 import com.luanvan.webservice.command.mappers.BookMapper;
 import com.luanvan.webservice.command.mappers.PictureMapper;
@@ -14,7 +15,6 @@ import com.luanvan.webservice.command.model.Category;
 import com.luanvan.webservice.command.model.Language;
 import com.luanvan.webservice.command.model.Manufacturer;
 import com.luanvan.webservice.command.model.Picture;
-import com.luanvan.webservice.command.model.SearchCriteria;
 import com.luanvan.webservice.command.repositories.AuthorRepository;
 import com.luanvan.webservice.command.repositories.BookRepository;
 import com.luanvan.webservice.command.repositories.CategoryRepository;
@@ -24,10 +24,8 @@ import com.luanvan.webservice.command.repositories.PictureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +56,6 @@ public class BookService {
 
   @Autowired
   private AuthorRepository authorRepository;
-  @Autowired
-  private WebClient webClient;
 
   @Autowired
   private KafkaTemplate<String, SendProductToCart> sendToCart;
@@ -105,6 +101,7 @@ public class BookService {
     Book book1 = bookRepository.save(book);
     for (CreatePicture pic : createBookRequest.getList()
     ) {
+      System.out.println(pic.getCaption());
       if (pictureRepository.findByCaption(pic.getCaption()).isEmpty()) {
         pictureRepository.save(pictureMapper.toPicture(pic, book1));
       }
@@ -156,7 +153,7 @@ public class BookService {
         pictureRepository.delete(pic);
       }
     }
-    List<Author> authorArrayList =  book.getAuthors();
+    List<Author> authorArrayList = book.getAuthors();
     if (authorArrayList != null && !authorArrayList.isEmpty()) {
       for (Author author : book.getAuthors()
       ) {
@@ -176,23 +173,92 @@ public class BookService {
 
   public void addCart(Integer id) {
     Optional<Book> bookOptional = bookRepository.findById(id);
-    if(bookOptional.isEmpty()){
+    if (bookOptional.isEmpty()) {
       throw new AppException("Không có sách này", HttpStatus.NOT_FOUND);
     }
     Book book = bookOptional.get();
     SendProductToCart sendProductToCart = SendProductToCart.builder()
             .id(id).name(book.getName()).price(book.getPrice())
             .build();
-    sendToCart.send("cart-order",sendProductToCart);
+    sendToCart.send("cart-order", sendProductToCart);
   }
 
   public List<Book> searchBooks(String name) {
-    System.out.println(String.format("%%%s%%",name));
+    System.out.println(String.format("%%%s%%", name));
     Specification<Book> spec = Specification.where(null);
     if (name != null) {
-      spec = spec.and(BookSpecification.hasName(String.format("%%%s%%",name)));
+      spec = spec.and(BookSpecification.hasName(String.format("%%%s%%", name)));
     }
     List<Book> books = bookRepository.findAll(spec);
     return books;
+  }
+
+  public void updateBook(int id, UpdateBookRequest updateBookRequest) {
+    Optional<Book> optionalBook = bookRepository.findById(id);
+    if (optionalBook.isEmpty()) {
+      throw new AppException("Không có sách này", HttpStatus.NOT_FOUND);
+    }
+    Book book = optionalBook.get();
+    if (!updateBookRequest.getName().equalsIgnoreCase(book.getName())) {
+      book.setName(updateBookRequest.getName());
+    }
+    if (updateBookRequest.getQuantity() != book.getQuantity()){
+      book.setQuantity(updateBookRequest.getQuantity());
+    }
+    if (!updateBookRequest.getDescription().equalsIgnoreCase(book.getDescription())) {
+      book.setDescription(updateBookRequest.getDescription());
+    }
+    if (updateBookRequest.getIdLanguage() != book.getLanguage().getId()) {
+      Optional<Language> language = languageRepository.findById(updateBookRequest.getIdLanguage());
+      if (language.isEmpty()) {
+        throw new AppException("Ngôn ngữ không hợp lệ", HttpStatus.BAD_REQUEST);
+      }
+      book.setLanguage(language.get());
+    }
+    if (updateBookRequest.getIdCategory() != book.getCategory().getId()) {
+      Optional<Category> category = categoryRepository.findById(updateBookRequest.getIdCategory());
+      if (category.isEmpty()) {
+        throw new AppException("Loại không hợp lệ", HttpStatus.BAD_REQUEST);
+      }
+      book.setCategory(category.get());
+    }
+    if (updateBookRequest.getIdManufacturer() != book.getManufacturer().getId()) {
+      Optional<Manufacturer> manufacturer = manufacturerRepository.findById(updateBookRequest.getIdManufacturer());
+      if (manufacturer.isEmpty()) {
+        throw new AppException("Nhà xuất bản không hợp lệ", HttpStatus.BAD_REQUEST);
+      }
+      book.setManufacturer(manufacturer.get());
+    }
+    if (updateBookRequest.getIdAuthor() != book.getAuthors().get(0).getId()) {
+      Optional<Author> author = authorRepository.findById(updateBookRequest.getIdAuthor());
+      if (author.isEmpty()) {
+        throw new AppException("Tác giả không hợp lệ", HttpStatus.BAD_REQUEST);
+      }
+      List<Author> authors = new ArrayList<>();
+      authors.add(author.get());
+      book.setAuthors(authors);
+    }
+    if (updateBookRequest.getQuantity() != book.getQuantity()) {
+      book.setQuantity(updateBookRequest.getQuantity());
+    }
+    if (updateBookRequest.getPrice() != book.getPrice()) {
+      book.setPrice(updateBookRequest.getPrice());
+    }
+    List<CreatePicture> createPictures = updateBookRequest.getList();
+    for (int i = 0; i< createPictures.size(); i++) {
+          if(!createPictures.get(i).getCaption().equalsIgnoreCase(book.getPictureList().get(i).getCaption())
+          || !createPictures.get(i).getPath().equalsIgnoreCase(book.getPictureList().get(i).getPath())){
+            Optional<Picture> picture = pictureRepository.findById(book.getPictureList().get(i).getId());
+            if(picture.isEmpty()){
+              throw new AppException("Không tìm thấy ảnh", HttpStatus.NOT_FOUND);
+            }
+            System.out.println(createPictures.get(i).getCaption());
+            picture.get().setPath(createPictures.get(i).getPath());
+            picture.get().setCaption(createPictures.get(i).getCaption());
+            pictureRepository.save(picture.get());
+          }
+    }
+    bookRepository.save(book);
+    System.out.println("Cập nhật thành công");
   }
 }

@@ -2,6 +2,7 @@ package com.luanvan.webservice.command.controller;
 
 import com.luanvan.webservice.command.dto.BookResponse;
 import com.luanvan.webservice.command.dto.CreateBookRequest;
+import com.luanvan.webservice.command.dto.UpdateBookRequest;
 import com.luanvan.webservice.command.model.Book;
 import com.luanvan.webservice.command.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,6 +40,11 @@ public class BookController {
   public ResponseEntity<BookResponse> addBook(@RequestBody CreateBookRequest createBookRequest){
     BookResponse bookResponse = bookService.addBooks(createBookRequest);
     return ResponseEntity.created(URI.create("/api/book" + bookResponse.getId())).body(bookResponse);
+  }
+
+  @PutMapping("/{id}")
+  public void updateBook(@PathVariable int id,@RequestBody UpdateBookRequest updateBookRequest){
+    bookService.updateBook(id, updateBookRequest);
   }
 
   @GetMapping("/basket/{id}")
