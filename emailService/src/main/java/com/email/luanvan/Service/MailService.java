@@ -1,6 +1,7 @@
 package com.email.luanvan.Service;
 
 import com.email.luanvan.Model.MailOrder;
+import com.email.luanvan.Model.MailStatus;
 import com.email.luanvan.Model.MailStructure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,7 +51,7 @@ public class MailService {
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", port);
-
+        System.out.println(mailOrder);
         Session session = Session.getInstance(props,
                 new Authenticator() {
                     @Override
@@ -71,5 +72,34 @@ public class MailService {
         }
         System.out.println(email);
         return mailOrder.getEmail();
+    }
+    @KafkaListener(topics = "updateStatus", containerFactory = "kafkaListenerContainerFactoryMailStatus")
+    public String sendMailUpdateStatus(MailStatus mailStatus){
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", port);
+        System.out.println(mailStatus);
+        Session session = Session.getInstance(props,
+                new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(email, password);
+                    }
+                });
+        Message message = new MimeMessage(session);
+        try {
+            message.setRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(mailStatus.getEmail())});
+            System.out.println(thymeleafService.contentUpdateStatus(mailStatus));
+            message.setFrom(new InternetAddress(email));
+            message.setSubject("Cập nhật trạng thái đơn hàng");
+            message.setContent(thymeleafService.contentUpdateStatus(mailStatus), CONTENT_TYPE_TEXT_HTML);
+            Transport.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(email);
+        return mailStatus.getEmail();
     }
 }

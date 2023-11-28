@@ -1,6 +1,7 @@
 package com.luanvan.oderService.Configs;
 
 import com.luanvan.oderService.dto.MailOrder;
+import com.luanvan.oderService.dto.MailStatus;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,22 @@ public class WebClientConfig {
     configProps.put(JsonSerializer.TYPE_MAPPINGS, "MailOrder:com.luanvan.oderService.dto.MailOrder");
     return new DefaultKafkaProducerFactory<>(configProps);
   }
+
+  @Bean
+  public ProducerFactory<String, MailStatus> producerFactoryToMailStatus() {
+    Map<String, Object> configProps = new HashMap<>();
+    configProps.put(
+            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
+            kafkaHost);
+    configProps.put(
+            ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+            StringSerializer.class);
+    configProps.put(
+            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+    configProps.put(JsonSerializer.TYPE_MAPPINGS, "MailOrder:com.luanvan.oderService.dto.MailStatus");
+    return new DefaultKafkaProducerFactory<>(configProps);
+  }
+
   @Bean
   public ProducerFactory<String, String> producerFactory() {
     Map<String, Object> configProps = new HashMap<>();
@@ -58,4 +75,11 @@ public class WebClientConfig {
   public KafkaTemplate<String, String> kafkaTemplate() {
     return new KafkaTemplate<>(producerFactory());
   }
+
+  @Bean
+  @LoadBalanced
+  public KafkaTemplate<String, MailStatus> kafkaTemplate3() {
+    return new KafkaTemplate<>(producerFactoryToMailStatus());
+  }
+
 }

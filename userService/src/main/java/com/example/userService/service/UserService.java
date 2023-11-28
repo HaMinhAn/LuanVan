@@ -10,14 +10,19 @@ import com.example.userService.model.AppException;
 import com.example.userService.model.CredentialsDto;
 import com.example.userService.model.RegisterDto;
 import com.example.userService.model.UpdateUserDto;
+import com.example.userService.model.UpdateUserRequest;
 import com.example.userService.model.UserDto;
+import com.example.userService.model.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.nio.CharBuffer;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -86,12 +91,26 @@ public class UserService {
     if(optionalUser.isEmpty()){
       throw new AppException("Người dùng không hợp lệ", HttpStatus.BAD_REQUEST);
     }
+    DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
+    // Parse the string to LocalDateTime
+    LocalDateTime localDateTime = LocalDateTime.parse(updateUserDto.getDateTime(), formatter);
+    System.out.println(updateUserDto.getDateTime());
     User user = optionalUser.get();
-    user.setAddress(updateUserDto.getAddress());
-    user.setAge(updateUserDto.getAge());
-    user.setName(updateUserDto.getName());
-    user.setPhoneNumber(updateUserDto.getPhoneNumber());
-    user.setDOB(updateUserDto.getDob());
+    if(!updateUserDto.getName().equals(user.getName())){
+      user.setName(updateUserDto.getName());
+    }
+    if(!updateUserDto.getAddress().equals(user.getAddress())){
+      user.setAddress(updateUserDto.getAddress());
+    }
+    if(updateUserDto.getAge() != (user.getAge())){
+      user.setAge(updateUserDto.getAge());
+    }
+    if(updateUserDto.getPhoneNumber() != (user.getPhoneNumber())){
+      user.setPhoneNumber(updateUserDto.getPhoneNumber());
+    }
+      user.setDOB(localDateTime);
+
     userRepository.save(user);
   }
 
@@ -107,5 +126,44 @@ public class UserService {
   }
   user.setPassword(passEncode);
   userRepository.save(user);
+  }
+  public void updateUser(int id, UpdateUserRequest updateUserRequest) {
+    Optional<User> optionalUser = userRepository.findById(id);
+    System.out.println(updateUserRequest);
+    if(optionalUser.isEmpty()){
+      throw new AppException("Khong the tim thong tin nguoi dung", HttpStatus.NOT_FOUND);
+    }
+    User user = optionalUser.get();
+    if(!updateUserRequest.getName().equals(user.getName())){
+      user.setName(updateUserRequest.getName());
+    }
+    if(!updateUserRequest.getAddress().equals(user.getAddress())){
+      user.setAddress(updateUserRequest.getAddress());
+    }
+    if(updateUserRequest.getAge() != (user.getAge())){
+      user.setAge(updateUserRequest.getAge());
+    }
+    if(updateUserRequest.getPhoneNumber() != (user.getPhoneNumber())){
+      user.setPhoneNumber(updateUserRequest.getPhoneNumber());
+    }
+    userRepository.save(user);
+    System.out.println("Cập nhật thông tin thành công");
+  }
+  public UpdateUserRequest getUserInfor(int id) {
+    Optional<User> user = userRepository.findById(id);
+    DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+    if(user.isEmpty()){
+      throw new AppException("Khong the tim thong tin nguoi dung", HttpStatus.NOT_FOUND);
+    }
+    System.out.println(user.get().getDOB());
+    UpdateUserRequest userResponse = UpdateUserRequest.builder()
+            .name(user.get().getName())
+            .age(user.get().getAge())
+            .sex(user.get().getSex())
+            .phoneNumber(user.get().getPhoneNumber())
+            .dateTime(user.get().getDOB().toString())
+            .address(user.get().getAddress())
+            .build();
+    return userResponse;
   }
 }

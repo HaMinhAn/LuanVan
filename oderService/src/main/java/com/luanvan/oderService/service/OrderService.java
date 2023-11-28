@@ -1,7 +1,11 @@
 package com.luanvan.oderService.service;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.luanvan.oderService.dto.MailOrder;
+import com.luanvan.oderService.dto.MailStatus;
+import com.luanvan.oderService.dto.OrderItems;
+import com.luanvan.oderService.dto.UpdateStatusOrder;
 import com.luanvan.oderService.model.AppException;
 import com.luanvan.oderService.model.Order;
 import com.luanvan.oderService.model.OrderItem;
@@ -20,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -43,7 +48,8 @@ public class OrderService {
   private PaymentMethodRepository paymentMethodRepository;
   @Autowired
   private KafkaTemplate<String, String> toBasket;
-
+  @Autowired
+  private KafkaTemplate<String, MailStatus> toMailStatus;
   @Autowired
   private KafkaTemplate<String, MailOrder> toMail;
 
@@ -104,6 +110,17 @@ public class OrderService {
       orderItemsRepository.save(orderItem);
     }
     Order order1 = orderOptional.get();
+    List<OrderItems> orderItemsList =new ArrayList<>();
+    for (OrderItem item: orderRequest.getItems()
+         ) {
+      OrderItems orderItems = OrderItems.builder()
+              .image(item.getImage())
+              .quantity(item.getQuantity())
+              .price(item.getPrice())
+              .name(item.getName())
+              .build();
+      orderItemsList.add(orderItems);
+    }
     MailOrder mailOrder = MailOrder
             .builder()
             .no(order1.getNo())
@@ -112,6 +129,7 @@ public class OrderService {
             .name(order1.getReceiver())
             .email(order1.getEmail())
             .address(order1.getAddress())
+            .items(orderItemsList)
             .build();
     toMail.send("sendmail", mailOrder);
     toBasket.send("cart-order", orderRequest.getUsername());
@@ -141,29 +159,43 @@ public class OrderService {
     toBasket.send("cart-order", name);
   }
 
-  public void updateStatusOrder(int id, int value) {
-    Optional<Order> orderOptional = orderRepository.findById(id);
-
+  public void updateStatusOrder(UpdateStatusOrder updateStatusOrder) {
+    Optional<Order> orderOptional = orderRepository.findById(updateStatusOrder.getId());
+    System.out.println(updateStatusOrder);
     if (orderOptional.isEmpty()) {
       throw new AppException("Không tìm thấy order", HttpStatus.NOT_FOUND);
     }
     Order order = orderOptional.get();
-    if(order.getStatus() == OrderStatus.RECEIVED){
+    if (order.getStatus() == OrderStatus.RECEIVED) {
       throw new AppException("Không thể cập nhật trạng thái giao dịch này", HttpStatus.BAD_REQUEST);
     }
-    switch (value) {
+    MailStatus status = new MailStatus();
+    status.setNo(order.getNo());
+    switch (updateStatusOrder.getState()) {
       case 0:
         order.setStatus(OrderStatus.CANCEL);
+        status.setOrderStatus(OrderStatus.CANCEL.name());
         break;
       case 1:
         order.setStatus(OrderStatus.SHIPPING);
+        status.setOrderStatus(OrderStatus.SHIPPING.name());
         break;
       case 2:
         order.setStatus(OrderStatus.RECEIVED);
+        status.setOrderStatus(OrderStatus.RECEIVED.name());
         order.setPaid(true);
         break;
       default:
-        break;
+        throw new AppException("Không thể cập nhật trạng thái giao dịch này", HttpStatus.BAD_REQUEST);
+    }
+    status.setUser(updateStatusOrder.getUser());
+    if( (updateStatusOrder.getUser() != "admin" && order.getStatus() == OrderStatus.CANCEL)){
+      status.setEmail("haminhan234@gmail.com");
+      toMailStatus.send("updateStatus", status);
+    } else {
+      status.setEmail(updateStatusOrder.getEmail());
+
+      toMailStatus.send("updateStatus", status);
     }
     orderRepository.save(order);
   }
@@ -191,7 +223,7 @@ public class OrderService {
 
   public List<Order> getListOrderByUser(String user) {
     Optional<List<Order>> orders = orderRepository.findAllByUsername(user);
-    if(orders.isEmpty()){
+    if (orders.isEmpty()) {
       return null;
     }
     return orders.get();

@@ -7,13 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder
-public class UpdateUserDto {
-  private String username;
-  private String password;
+public class UpdateUserRequest {
   private String name;
   private String phoneNumber;
   private Boolean sex;

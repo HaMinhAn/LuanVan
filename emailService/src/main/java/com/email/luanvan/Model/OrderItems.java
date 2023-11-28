@@ -5,18 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MailOrder {
-  private String email;
-  private String no;
-  private long price;
-  private long phoneNumber;
-  private String address;
+public class OrderItems {
   private String name;
-  private List<OrderItems> items;
+
+  private int quantity;
+
+  private long price;
+  private String image;
+
 }

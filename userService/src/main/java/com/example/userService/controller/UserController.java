@@ -1,14 +1,19 @@
 package com.example.userService.controller;
 
 import java.net.URI;
+import java.text.DateFormat;
+import java.util.Date;
 
 import com.example.userService.model.CredentialsDto;
 import com.example.userService.model.RegisterDto;
 import com.example.userService.model.UpdateUserDto;
+import com.example.userService.model.UpdateUserRequest;
 import com.example.userService.model.UserDto;
+import com.example.userService.model.UserResponse;
 import com.example.userService.service.JwtService;
 import com.example.userService.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,8 +39,9 @@ public class UserController {
 
 
   @PutMapping("/{id}")
-  public void updateInfor(@PathVariable int id, @RequestBody UpdateUserDto registerDto){
-    userService.updateInfor(id, registerDto);
+  public void updateInfor(@PathVariable int id, @RequestBody UpdateUserDto updateUserDto){
+    System.out.println(updateUserDto.getName());
+    userService.updateInfor(id, updateUserDto);
   }
 
   @PutMapping("/pass/{id}")
@@ -65,5 +71,11 @@ public class UserController {
 
     return ResponseEntity.created(URI.create("/users" + user.getId()))
             .body(user);
+  }
+  @GetMapping("/all/{id}")
+  public ResponseEntity<UpdateUserRequest> getPrivateInfor(@PathVariable int id){
+    UpdateUserRequest userResponse = userService.getUserInfor(id);
+    System.out.println(userResponse.getDateTime());
+    return ResponseEntity.ok(userResponse);
   }
 }

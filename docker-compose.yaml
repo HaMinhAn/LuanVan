@@ -2,6 +2,12 @@ version: '1'
 services:
   api-gateway:
     image: luanvan/api-gateway
+    depends_on:
+      - order-service
+      - user-service
+      - email-service
+      - basket-service
+      - book-service
     environment:
       EUREKA_URI: http://server:8761/eureka
     ports:
@@ -14,6 +20,9 @@ services:
 
   email-service:
     image: luanvan/email-service
+    depends_on:
+      - kafka
+      - server
     environment:
       emailuser: haminhan234@gmail.com
       emailpass: 'grod pkgo frgs cble'
@@ -26,6 +35,9 @@ services:
 
   user-service:
     image: luanvan/user-service
+    depends_on:
+      - server
+      - mssqldb
     ports:
       - 9003:9003
     environment:
@@ -37,6 +49,10 @@ services:
 
   order-service:
     image: luanvan/order-service
+    depends_on:
+      - kafka
+      - server
+      - mssqldb
     ports:
       - 9007:9007
     environment:
@@ -53,6 +69,9 @@ services:
 
   book-service:
     image: luanvan/book-service
+    depends_on:
+      - server
+      - mssqldb
     ports:
       - 9001:9001
     environment:
@@ -67,6 +86,10 @@ services:
 
   basket-service:
     image: luanvan/basket-service
+    depends_on:
+      - kafka
+      - server
+      - redisDB
     environment:
       KAFKA_SERVER: kafka:29092
       EUREKA_URI: http://server:8761/eureka
@@ -83,11 +106,6 @@ services:
     ports:
       - 6379:6379
 
-  mongoDB:
-    image: mongo
-    ports:
-      - 27017:27017
-
   mssqldb:
     environment:
       ACCEPT_EULA: "Y"
@@ -99,10 +117,10 @@ services:
     ports:
       - "1433:1433"
 
-#  front-end:
-#    image: luanvan/ui-luanvan
-#    ports:
-#      - 3000:80
+  front-end:
+    image: luanvan/ui-luanvan
+    ports:
+      - 3000:80
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -130,7 +148,7 @@ services:
   grafana:
     image: grafana/grafana
     ports:
-      - 3100:3000
+      - 3101:3000
     container_name: grafana
 
   prometheus:
@@ -139,7 +157,14 @@ services:
       - "9090:9090"
     volumes:
       - E:\LuanVan\backend\LuanVan\microservice\prometheus\prometheus.yaml:/etc/prometheus/prometheus.yml
-
+  loki:
+    image: grafana/loki
+    ports:
+      - "3100:3100"
+  promtail:
+    image: grafana/promtail
+    ports:
+      - "9080:9080"
 networks:
   default:
     name: ma_microservices

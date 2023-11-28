@@ -2,8 +2,31 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <p>Đơn hàng <h3 th:text="${no}"></h3> của bạn đã được thanh toán với số tiền là <h3 th:number="${price}"></h3>.</p>
+
 <p>Người nhận: <h3 th:text="${name}"></h3></p>
 <p>Số điện thoại: <h3 th:number="${phone}"></h3></p>
 <p>Địa chỉ: <h3 th:text="${address}"></h3></p>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Tên sản phẩm</th>
+        <th>Thông tin khác</th>
+        <!-- Thêm các cột thông tin khác nếu cần -->
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Sử dụng vòng lặp để lặp qua danh sách sản phẩm -->
+    <tr th:each="item : ${items}">
+        <td th:text="${item.name}"></td>
+        <td>
+            <!-- Hiển thị các thông tin khác của sản phẩm -->
+            <p>Giá: <span th:text="${item.price}"></span></p>
+            <p>Số lượng: <span th:text="${item.quantity}"></span></p>
+            <!-- Thêm các thông tin khác nếu cần -->
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

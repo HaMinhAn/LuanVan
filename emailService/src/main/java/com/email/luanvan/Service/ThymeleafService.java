@@ -1,6 +1,7 @@
 package com.email.luanvan.Service;
 
 import com.email.luanvan.Model.MailOrder;
+import com.email.luanvan.Model.MailStatus;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -18,7 +19,7 @@ public class ThymeleafService {
   private static final String UTF_8 = "UTF-8";
 
   private static final String TEMPLATE_NAME = "mail-template";
-
+  private static final String TEMPLATE_UPDATE_STATUS = "update-status-mail.html";
   private static TemplateEngine templateEngine;
 
   static {
@@ -56,7 +57,15 @@ public class ThymeleafService {
     context.setVariable("no", order.getNo());
     context.setVariable("price", order.getPrice());
     context.setVariable("address", order.getAddress());
-
+    context.setVariable("items", order.getItems());
     return templateEngine.process(TEMPLATE_NAME, context);
+  }
+  public String contentUpdateStatus(MailStatus order) {
+    final Context context = new Context();
+
+    context.setVariable("no", order.getNo());
+    context.setVariable("status", order.getOrderStatus());
+    context.setVariable("user", order.getUser());
+    return templateEngine.process(TEMPLATE_UPDATE_STATUS, context);
   }
 }

@@ -1,6 +1,7 @@
 package com.luanvan.oderService.controllers;
 
 import com.luanvan.oderService.dto.OrderRequest;
+import com.luanvan.oderService.dto.UpdateStatusOrder;
 import com.luanvan.oderService.model.Order;
 import com.luanvan.oderService.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +46,9 @@ public class OrderController {
   public List<Order> getOrderByStatus(@PathVariable int status){
     return orderService.getListOrderByStatus(status);
   }
-  @PutMapping("/{id}/{state}")
-  public ResponseEntity updateStatusOrder(@PathVariable int id, @PathVariable int state){
-    orderService.updateStatusOrder(id, state);
+  @PutMapping("/update/status")
+  public ResponseEntity updateStatusOrder(@RequestBody UpdateStatusOrder updateStatusOrder){
+    orderService.updateStatusOrder(updateStatusOrder);
     return ResponseEntity.ok("Cập nhật trạng thái đơn hàng thành công");
   }
   @PostMapping("/cart/delete/{username}")
