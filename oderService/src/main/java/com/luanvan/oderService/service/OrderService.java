@@ -2,6 +2,7 @@ package com.luanvan.oderService.service;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.luanvan.oderService.dto.DecreaseQuantity;
 import com.luanvan.oderService.dto.MailOrder;
 import com.luanvan.oderService.dto.MailStatus;
 import com.luanvan.oderService.dto.OrderItems;
@@ -50,6 +51,9 @@ public class OrderService {
   private KafkaTemplate<String, String> toBasket;
   @Autowired
   private KafkaTemplate<String, MailStatus> toMailStatus;
+
+  @Autowired
+  private KafkaTemplate<String, DecreaseQuantity> toBook;
   @Autowired
   private KafkaTemplate<String, MailOrder> toMail;
 
@@ -131,6 +135,13 @@ public class OrderService {
             .address(order1.getAddress())
             .items(orderItemsList)
             .build();
+    Map<String, Integer> nameItems = new HashMap<>();
+    orderRequest.getItems().forEach(item ->{
+      nameItems.put(item.getName(), item.getQuantity());
+    });
+
+    DecreaseQuantity decreaseQuantity = DecreaseQuantity.builder().name(nameItems).build();
+    toBook.send("reduce-quantity", decreaseQuantity);
     toMail.send("sendmail", mailOrder);
     toBasket.send("cart-order", orderRequest.getUsername());
   }
@@ -235,6 +246,7 @@ public class OrderService {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
 
     for (Order order : allOrders) {
+
       // Chuyển đổi LocalDateTime thành String sử dụng DateTimeFormatter
       String orderDateString = order.getCreatedDate().format(formatter);
 

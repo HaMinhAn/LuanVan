@@ -4,6 +4,7 @@ import com.luanvan.webservice.command.configs.BookSpecification;
 import com.luanvan.webservice.command.dto.BookResponse;
 import com.luanvan.webservice.command.dto.CreateBookRequest;
 import com.luanvan.webservice.command.dto.CreatePicture;
+import com.luanvan.webservice.command.dto.DecreaseQuantity;
 import com.luanvan.webservice.command.dto.SendProductToCart;
 import com.luanvan.webservice.command.dto.UpdateBookRequest;
 import com.luanvan.webservice.command.exceptions.AppException;
@@ -24,6 +25,7 @@ import com.luanvan.webservice.command.repositories.PictureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -261,4 +263,17 @@ public class BookService {
     bookRepository.save(book);
     System.out.println("Cập nhật thành công");
   }
+
+  @KafkaListener(topics = "reduce-quantity", containerFactory = "consumerDecreaseQuantity")
+  public void descreaseQuantity(DecreaseQuantity decreaseQuantity){
+    decreaseQuantity.getName().entrySet().forEach(product -> {
+      Optional<Book> book =bookRepository.findByName(product.getKey());
+
+      Book book1 = book.get();
+      book1.setQuantity(book1.getQuantity() - product.getValue());
+      bookRepository.save(book1);
+    });
+
+  }
+
 }

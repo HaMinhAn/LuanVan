@@ -5,6 +5,9 @@
       <module name="gateway-service" target="11" />
       <module name="gateway-service.main" target="11" />
       <module name="gateway-service.test" target="11" />
+      <module name="inventoryService" target="11" />
+      <module name="inventoryService.main" target="11" />
+      <module name="inventoryService.test" target="11" />
       <module name="luanvan.main" target="11" />
       <module name="luanvan.test" target="11" />
     </bytecodeTargetLevel>

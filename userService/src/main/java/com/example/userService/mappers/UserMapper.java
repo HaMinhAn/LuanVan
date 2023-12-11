@@ -5,6 +5,8 @@ import com.example.userService.model.RegisterDto;
 import com.example.userService.model.UserDto;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 public class UserMapper {
 

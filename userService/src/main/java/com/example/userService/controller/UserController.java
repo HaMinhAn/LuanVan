@@ -66,6 +66,7 @@ public class UserController {
   }
   @PostMapping("/register")
   public ResponseEntity<UserDto> register(@RequestBody RegisterDto registerDto) {
+    System.out.println(registerDto.getDateTime());
     UserDto user = userService.register(registerDto);
     user.setToken(jwtService.generateToken(user.getUsername()));
 

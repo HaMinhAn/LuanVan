@@ -67,8 +67,12 @@ public class UserService {
     if (userOptional.isPresent()) {
       throw new AppException("User is existed", HttpStatus.BAD_REQUEST);
     }
+    DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+    // Parse the string to LocalDateTime
+    LocalDateTime localDateTime = LocalDateTime.parse(registerDto.getDateTime(), formatter);
     Optional<Role> userRole = roleRepository.findById(2);
     User user = userMapper.registerToUser(registerDto);
+    user.setDOB(localDateTime);
     user.setPassword(passwordEncoder.encode(CharBuffer.wrap(registerDto.getPassword())));
     user.setRoles(Arrays.asList(userRole.get()));
     User userSave = userRepository.save(user);
@@ -95,7 +99,6 @@ public class UserService {
 
     // Parse the string to LocalDateTime
     LocalDateTime localDateTime = LocalDateTime.parse(updateUserDto.getDateTime(), formatter);
-    System.out.println(updateUserDto.getDateTime());
     User user = optionalUser.get();
     if(!updateUserDto.getName().equals(user.getName())){
       user.setName(updateUserDto.getName());

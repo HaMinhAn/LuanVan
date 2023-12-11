@@ -14,6 +14,7 @@ public class RegisterDto {
   private String password;
   private String name;
   private String phoneNumber;
+  private String dateTime;
   private Boolean sex;
   private int age;
   private String address;
