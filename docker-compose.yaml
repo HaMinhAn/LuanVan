@@ -24,8 +24,8 @@ services:
       - kafka
       - server
     environment:
-      emailuser: haminhan234@gmail.com
-      emailpass: 'grod pkgo frgs cble'
+      emailuser: ""
+      emailpass: ""
       EUREKA_URI: http://server:8761/eureka
       KAFKA_SERVER: kafka:29092
     ports:
